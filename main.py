@@ -45,7 +45,7 @@ def main(type: str, counter_str: str, delay: float):
             except Exception as e:
                 print(e)
 
-        case 'read':
+        case 'get':
             try:
                 connection = psycopg2.connect(
                     host='192.168.0.132',
@@ -64,9 +64,6 @@ def main(type: str, counter_str: str, delay: float):
                     if temp_int == base_counter:
                         break
 
-                    first_name = names.get_first_name()
-                    surname = names.get_last_name()
-
                     class_id = random.randint(1, 5)
                     group_id = random.randint(1, 8)
 
@@ -80,16 +77,56 @@ def main(type: str, counter_str: str, delay: float):
             except Exception as e:
                 print(e)
 
+        case 'del':
+
+            try:
+
+                connection = psycopg2.connect(
+                    host='192.168.0.132',
+                    port='5430',
+                    user=db_config.user,
+                    password=db_config.password,
+                    database=db_config.db_name
+                )
+
+                connection.set_session(autocommit=True)
+
+                temp_int = 0
+                while ...:
+                    sleep(delay)
+
+                    if temp_int == base_counter:
+                        break
+
+                    # get list of all indexes
+
+                    with connection.cursor() as cursor:
+                        command_new_user = f"select count(*) from user_scheme"
+                        cursor.execute(command_new_user)
+                        len_of_db = cursor.fetchone()
+                        print(len_of_db)
+
+                        random_id = random.randint(1,len_of_db[0])
+                        print(random_id)
+
+                        command_new_user = f"DELETE FROM user_scheme WHERE user_id = {random_id}"
+                        cursor.execute(command_new_user)
+
+                    temp_int += 1
+
+            except Exception as e:
+                print(e)
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
 
     parser.add_argument('-type', type=str, required=True,
-                        help='type of application run.')
+                        help='Type of application run. gen - randomly generate users into main table}')
     parser.add_argument('-counter', type=str, required=False,
-                        help='counter of run. With {-1} specified will run indefinitely')
+                        help='Counter of run. With {-1} specified will run indefinitely')
     parser.add_argument('-delay', type=float, required=False, default=0.0,
-                        help='delay between iterations of required command. Default - no delay')
+                        help='Delay between iterations of required command. Default - no delay')
 
     args = parser.parse_args()
 
